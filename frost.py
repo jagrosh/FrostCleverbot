@@ -20,11 +20,9 @@ async def on_message(message):
         if message.server == None:
             await client.send_typing(message.channel)
             await client.send_message(message.channel, cb.ask(message.content))
-        else:
-            m = re.match(r'(.*)\s*<@!?'+client.user.id+'>\s*(.*)',message.content)
-            if m != None:
-                await client.send_typing(message.channel)
-                await client.send_message(message.channel, cb.ask(m.group(1)+' '+m.group(2)))
+        else if client.user in message.mentions:
+            await client.send_typing(message.channel)
+            await client.send_message(message.channel, message.content.replace(msg.server.me.mention, ''))
 
 print('Starting...')
 client.run('YOUR TOKEN HERE')
