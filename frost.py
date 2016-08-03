@@ -19,10 +19,10 @@ async def on_message(message):
     if not message.author.id == client.user.id:
         if message.server == None:
             await client.send_typing(message.channel)
-            await client.send_message(message.channel, cb.ask(message.content))
+            await client.send_message(message.channel, cb.ask(message.content) )
         elif client.user in message.mentions:
             await client.send_typing(message.channel)
-            await client.send_message(message.channel, message.content.replace(msg.server.me.mention, ''))
+            await client.send_message(message.channel, cb.ask(message.content.replace(message.server.me.mention, '')) )
 
 print('Starting...')
 client.run('YOUR TOKEN HERE')
