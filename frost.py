@@ -20,7 +20,7 @@ async def on_message(message):
         if message.server == None:
             await client.send_typing(message.channel)
             await client.send_message(message.channel, cb.ask(message.content))
-        else if client.user in message.mentions:
+        elif client.user in message.mentions:
             await client.send_typing(message.channel)
             await client.send_message(message.channel, message.content.replace(msg.server.me.mention, ''))
 
