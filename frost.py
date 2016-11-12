@@ -8,11 +8,9 @@ cb = Cleverbot()
 
 @client.event
 async def on_ready():
-    print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
+    print('Logged in as '+client.user.name+' (ID:'+client.user.id+')')
     print(str(len(client.servers))+' servers')
-    await client.change_status(game=discord.Game(name='chat with me!'),idle=False)
+    await client.change_presence(game=discord.Game(name='chat with me!'))
 
 @client.event
 async def on_message(message):
