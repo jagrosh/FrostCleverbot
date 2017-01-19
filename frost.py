@@ -4,7 +4,7 @@ import re
 from cleverbot import Cleverbot
 
 client = discord.Client()
-cb = Cleverbot()
+cb = Cleverbot('frost discord bot')
 
 @client.event
 async def on_ready():
