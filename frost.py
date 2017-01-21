@@ -1,6 +1,5 @@
 import discord
 import asyncio
-import re
 from cleverbot import Cleverbot
 
 client = discord.Client()
@@ -14,7 +13,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if not message.author.id == client.user.id:
+    if not message.author.bot:
         if message.server == None:
             await client.send_typing(message.channel)
             await client.send_message(message.channel, cb.ask(message.content) )
