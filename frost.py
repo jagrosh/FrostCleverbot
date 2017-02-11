@@ -5,7 +5,7 @@ import json
 
 client = discord.Client()
 user = 'CLEVERBOT.IO API USER'
-key = 'rCLEVERBOT.IO API KEY'
+key = 'CLEVERBOT.IO API KEY'
 
 @client.event
 async def on_ready():
