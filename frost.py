@@ -1,25 +1,26 @@
 import discord
 import asyncio
-from cleverbot import Cleverbot
+import requests
+import json
 
 client = discord.Client()
-cb = Cleverbot('frost discord bot')
+user = 'CLEVERBOT.IO API USER'
+key = 'rCLEVERBOT.IO API KEY'
 
 @client.event
 async def on_ready():
-    print('Logged in as '+client.user.name+' (ID:'+client.user.id+')')
-    print(str(len(client.servers))+' servers')
+    print('Logged in as '+client.user.name+' (ID:'+client.user.id+') | '+str(len(client.servers))+' servers')
     await client.change_presence(game=discord.Game(name='chat with me!'))
 
 @client.event
 async def on_message(message):
-    if not message.author.bot:
-        if message.server == None:
-            await client.send_typing(message.channel)
-            await client.send_message(message.channel, cb.ask(message.content) )
-        elif client.user in message.mentions:
-            await client.send_typing(message.channel)
-            await client.send_message(message.channel, cb.ask(message.content.replace(message.server.me.mention, '')) )
+	if not message.author.bot and (message.server == None or client.user in message.mentions):
+        await client.send_typing(message.channel)
+        txt = message.content.replace(message.server.me.mention,'') if message.server else message.content
+        r = json.loads(requests.post('https://cleverbot.io/1.0/ask', json={'user':user, 'key':key, 'nick':'frost', 'text':txt}).text)
+        if r['status'] == 'success':
+            await client.send_message(message.channel, r['response'] )
 
 print('Starting...')
-client.run('YOUR TOKEN HERE')
+requests.post('https://cleverbot.io/1.0/create', json={'user':user, 'key':key, 'nick':'frost'})
+client.run('DISCORD BOT TOKEN')
