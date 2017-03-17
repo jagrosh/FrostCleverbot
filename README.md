@@ -13,5 +13,8 @@ If you're interested in running it yourself, the requirements are:
 
 Then, just add your token at the bottom of the file, and your user and key near the top!
 
+### Other Versions
+Ruby | discordrb - https://github.com/Seriell/FrostCleverbot-rb
+
 ### Notes
 Ah, cleverbot. Why did you have to become [a paid service](https://www.cleverbot.com/api/)? Well, it's honestly no surprise, considering how many Discord bots used the cleverbot features. Hopefully cleverbot.io can perform as well, and maybe even get a little bit smarter.
