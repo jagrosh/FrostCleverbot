@@ -1,7 +1,7 @@
-import discord
-import json
-import aiohttp
 import asyncio
+import aiohttp
+import json
+import discord
 
 client = discord.Client()
 user = 'CLEVERBOT.IO API USER'
