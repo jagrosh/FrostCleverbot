@@ -1,26 +1,24 @@
-import discord
-import asyncio
-import requests
-import json
+import asyncio, aiohttp, discord
 
-client = discord.Client()
-user = 'CLEVERBOT.IO API USER'
-key = 'CLEVERBOT.IO API KEY'
+class FrostCleverbot(discord.Client):
+    async def on_ready(self):
+        print('Logged in as {0.user.name} (ID: {0.user.id} ) | {1} servers'.format(self, str(len(self.servers))))
+        await self.change_presence(game=discord.Game(name='chat with me!'))
 
-@client.event
-async def on_ready():
-    print('Logged in as '+client.user.name+' (ID:'+client.user.id+') | '+str(len(client.servers))+' servers')
-    await client.change_presence(game=discord.Game(name='chat with me!'))
-
-@client.event
-async def on_message(message):
-    if not message.author.bot and (message.server == None or client.user in message.mentions):
-        await client.send_typing(message.channel)
-        txt = message.content.replace(message.server.me.mention,'') if message.server else message.content
-        r = json.loads(requests.post('https://cleverbot.io/1.0/ask', json={'user':user, 'key':key, 'nick':'frost', 'text':txt}).text)
-        if r['status'] == 'success':
-            await client.send_message(message.channel, r['response'] )
+    async def on_message(self, message):
+        if not message.author.bot and (not message.server or message.server.me in message.mentions):
+            await self.send_typing(message.channel)
+            try:
+                input = re.sub('<@!?'+self.user.id+'>', '', message.content).strip()
+                params = {'botid': os.environ['PANDORA_BOT'] or 'PANDORABOTS BOT ID', 'custid': message.author.id, 'input': input or 'Hello'}
+                async with http.get('https://www.pandorabots.com/pandora/talk-xml', params=params) as resp:
+                    text = await resp.text()
+                    text = text[text.find('<that>')+6:text.rfind('</that>')]
+                    text = text.replace('&quot;','"').replace('&lt;','<').replace('&gt;','>').replace('&amp;','&').replace('<br>','\n')
+                    await self.send_message(message.channel, text)
+            except asyncio.TimeoutError:
+                await self.send_message(message.channel, 'Uh oh, I think my head is on backwards!')
 
 print('Starting...')
-requests.post('https://cleverbot.io/1.0/create', json={'user':user, 'key':key, 'nick':'frost'})
-client.run('DISCORD BOT TOKEN')
+http = aiohttp.ClientSession()
+FrostCleverbot().run(os.environ['BOT_TOKEN'] or 'DISCORD BOT TOKEN')
