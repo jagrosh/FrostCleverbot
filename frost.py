@@ -1,4 +1,4 @@
-import asyncio, aiohttp, discord
+import asyncio, aiohttp, discord, os, re
 
 class FrostCleverbot(discord.Client):
     async def on_ready(self):
@@ -10,15 +10,18 @@ class FrostCleverbot(discord.Client):
             await self.send_typing(message.channel)
             try:
                 input = re.sub('<@!?'+self.user.id+'>', '', message.content).strip()
-                params = {'botid': os.environ['PANDORA_BOT'] or 'PANDORABOTS BOT ID', 'custid': message.author.id, 'input': input or 'Hello'}
+                params = {'botid': os.environ['PANDORA_BOT'] or 'PANDORABOTS BOT ID HERE', 'custid': message.author.id, 'input': input or 'Hello'}
                 async with http.get('https://www.pandorabots.com/pandora/talk-xml', params=params) as resp:
-                    text = await resp.text()
-                    text = text[text.find('<that>')+6:text.rfind('</that>')]
-                    text = text.replace('&quot;','"').replace('&lt;','<').replace('&gt;','>').replace('&amp;','&').replace('<br>','\n')
-                    await self.send_message(message.channel, text)
+                    if resp.status == 200:
+                        text = await resp.text()
+                        text = text[text.find('<that>')+6:text.rfind('</that>')]
+                        text = text.replace('&quot;','"').replace('&lt;','<').replace('&gt;','>').replace('&amp;','&').replace('<br>',' ')
+                        await self.send_message(message.channel, text)
+                    else:
+                        await self.send_message(message.channel, 'Uh oh, I didn\'t quite catch that!')
             except asyncio.TimeoutError:
                 await self.send_message(message.channel, 'Uh oh, I think my head is on backwards!')
 
 print('Starting...')
 http = aiohttp.ClientSession()
-FrostCleverbot().run(os.environ['BOT_TOKEN'] or 'DISCORD BOT TOKEN')
+FrostCleverbot().run(os.environ['BOT_TOKEN'] or 'PUT DISCORD BOT TOKEN HERE')
